@@ -1,6 +1,6 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /**
- * Copyright (c) 2017-2019, Regents of the University of California.
+ * Copyright (c) 2017-2020, Regents of the University of California.
  *
  * This file is part of ndncert, a certificate management system based on NDN.
  *
@@ -48,7 +48,7 @@ ClientModule::generateProbeInfoInterest(const Name& caName)
   Name interestName = caName;
   if (readString(caName.at(-1)) != "CA")
     interestName.append("CA");
-  interestName.append("_PROBE").append("INFO");
+  interestName.append("PROBE").append("INFO");
   auto interest = make_shared<Interest>(interestName);
   interest->setMustBeFresh(true);
   interest->setCanBePrefix(false);
@@ -94,7 +94,7 @@ shared_ptr<Interest>
 ClientModule::generateProbeInterest(const ClientCaItem& ca, const std::string& probeInfo)
 {
   Name interestName = ca.m_caName;
-  interestName.append("CA").append("_PROBE");
+  interestName.append("CA").append("PROBE");
   auto interest = make_shared<Interest>(interestName);
   interest->setMustBeFresh(true);
   interest->setCanBePrefix(false);
@@ -179,7 +179,7 @@ ClientModule::generateNewInterest(const time::system_clock::TimePoint& notBefore
 
   // generate Interest packet
   Name interestName = m_ca.m_caName;
-  interestName.append("CA").append("_NEW");
+  interestName.append("CA").append("NEW");
   auto interest = make_shared<Interest>(interestName);
   interest->setMustBeFresh(true);
   interest->setCanBePrefix(false);
@@ -227,7 +227,7 @@ ClientModule::generateChallengeInterest(const JsonSection& paramJson)
   m_challengeType = paramJson.get(JSON_CLIENT_SELECTED_CHALLENGE, "");
 
   Name interestName = m_ca.m_caName;
-  interestName.append("CA").append("_CHALLENGE").append(m_requestId);
+  interestName.append("CA").append("CHALLENGE").append(m_requestId);
   auto interest = make_shared<Interest>(interestName);
   interest->setMustBeFresh(true);
   interest->setCanBePrefix(false);
@@ -268,7 +268,7 @@ shared_ptr<Interest>
 ClientModule::generateDownloadInterest()
 {
   Name interestName = m_ca.m_caName;
-  interestName.append("CA").append("_DOWNLOAD").append(m_requestId);
+  interestName.append("CA").append("DOWNLOAD").append(m_requestId);
   auto interest = make_shared<Interest>(interestName);
   interest->setMustBeFresh(true);
   interest->setCanBePrefix(false);
