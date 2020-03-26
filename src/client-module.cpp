@@ -43,12 +43,12 @@ ClientModule::ClientModule(security::v2::KeyChain& keyChain)
 ClientModule::~ClientModule() = default;
 
 shared_ptr<Interest>
-ClientModule::generateProbeInfoInterest(const Name& caName)
+ClientModule::generateInfoInterest(const Name& caName)
 {
   Name interestName = caName;
   if (readString(caName.at(-1)) != "CA")
     interestName.append("CA");
-  interestName.append("PROBE").append("INFO");
+  interestName.append("INFO");
   auto interest = make_shared<Interest>(interestName);
   interest->setMustBeFresh(true);
   interest->setCanBePrefix(false);
@@ -331,7 +331,7 @@ ClientModule::parseProbeComponents(const std::string& probe)
   return components;
 }
 
-const JsonSection
+JsonSection
 ClientModule::genProbeRequestJson(const ClientCaItem& ca, const std::string& probeInfo)
 {
   JsonSection root;
@@ -347,7 +347,7 @@ ClientModule::genProbeRequestJson(const ClientCaItem& ca, const std::string& pro
   return root;
 }
 
-const JsonSection
+JsonSection
 ClientModule::genNewRequestJson(const std::string& ecdhPub, const security::v2::Certificate& certRequest,
                                 const shared_ptr<Data>& probeToken)
 {

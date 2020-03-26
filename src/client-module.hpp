@@ -1,6 +1,6 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /**
- * Copyright (c) 2017-2019, Regents of the University of California.
+ * Copyright (c) 2017-2020, Regents of the University of California.
  *
  * This file is part of ndncert, a certificate management system based on NDN.
  *
@@ -69,7 +69,7 @@ public:
   }
 
   shared_ptr<Interest>
-  generateProbeInfoInterest(const Name& caName);
+  generateInfoInterest(const Name& caName);
 
   bool
   verifyProbeInfoResponse(const Data& reply);
@@ -126,10 +126,10 @@ public:
   parseProbeComponents(const std::string& probe);
 
 PUBLIC_WITH_TESTS_ELSE_PRIVATE:
-  const JsonSection
+  JsonSection
   genProbeRequestJson(const ClientCaItem& ca, const std::string& probeInfo);
 
-  const JsonSection
+  JsonSection
   genNewRequestJson(const std::string& ecdhPub, const security::v2::Certificate& certRequest,
                     const shared_ptr<Data>& probeToken = nullptr);
 
