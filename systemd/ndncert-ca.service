@@ -1,0 +1,20 @@
+[Unit]
+Description=NDNCERT
+Documentation=man:ndncert
+BindsTo=nfd.service
+After=nfd.service
+
+[Service]
+Environment=HOME=/var/lib/ndn/ndncert-ca
+User=ndn
+Group=ndn
+ExecStart=/usr/local/bin/ndncert-ca-server -r -H 127.0.0.1 -P 7376
+Restart=on-failure
+ProtectSystem=full
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectHome=yes
+
+[Install]
+WantedBy=multi-user.target
+WantedBy=nfd.service

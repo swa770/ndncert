@@ -98,9 +98,3 @@ def build(bld):
         target='bin/ndncert-send-email-challenge',
         install_path='${BINDIR}',
         chmod=Utils.O755)
-
-    if Utils.unversioned_sys_platform() == 'linux':
-        bld(features='subst',
-            name='ndncert-server.service',
-            source='systemd/ndncert-server.service.in',
-            target='systemd/ndncert-server.service')
