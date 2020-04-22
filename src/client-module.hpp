@@ -110,9 +110,6 @@ public:
   generateCertFetchInterest();
 
   void
-  onDownloadResponse(const Data& reply);
-
-  void
   onCertFetchResponse(const Data& reply);
 
   // helper functions
@@ -146,6 +143,7 @@ PUBLIC_WITH_TESTS_ELSE_PRIVATE:
   std::string m_challengeStatus = "";
   std::string m_challengeType = "";
   std::string m_certId = "";
+  std::string m_issuedCertName = "";
   std::list<std::string> m_challengeList;
   bool m_isCertInstalled = false;
 

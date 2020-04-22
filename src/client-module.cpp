@@ -262,6 +262,7 @@ ClientModule::onChallengeResponse(const Data& reply)
   m_challengeStatus = contentJson.get(JSON_CHALLENGE_STATUS, "");
   m_remainingTries = contentJson.get(JSON_CHALLENGE_REMAINING_TRIES, 0);
   m_freshBefore = time::system_clock::now() + time::seconds(contentJson.get(JSON_CHALLENGE_REMAINING_TIME, 0));
+  m_issuedCertName = contentJson.get(JSON_CHALLENGE_ISSUED_CERT_NAME, "");
 }
 
 shared_ptr<Interest>
@@ -278,8 +279,7 @@ ClientModule::generateDownloadInterest()
 shared_ptr<Interest>
 ClientModule::generateCertFetchInterest()
 {
-  Name interestName = m_identityName;
-  interestName.append("KEY").append(m_certId);
+  Name interestName = m_issuedCertName;
   auto interest = make_shared<Interest>(interestName);
   interest->setMustBeFresh(true);
   interest->setCanBePrefix(false);
@@ -287,24 +287,18 @@ ClientModule::generateCertFetchInterest()
 }
 
 void
-ClientModule::onDownloadResponse(const Data& reply)
+ClientModule::onCertFetchResponse(const Data& reply)
 {
   try {
     security::v2::Certificate cert(reply.getContent().blockFromValue());
     m_keyChain.addCertificate(m_key, cert);
-    _LOG_TRACE("Got DOWNLOAD response and installed the cert " << cert.getName());
+    _LOG_TRACE("Fetched and installed the cert " << cert.getName());
   }
   catch (const std::exception& e) {
     _LOG_ERROR("Cannot add replied certificate into the keychain " << e.what());
     return;
   }
   m_isCertInstalled = true;
-}
-
-void
-ClientModule::onCertFetchResponse(const Data& reply)
-{
-  onDownloadResponse(reply);
 }
 
 JsonSection
