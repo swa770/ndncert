@@ -36,11 +36,13 @@ BOOST_AUTO_TEST_CASE(ReadConfigFile)
 {
   CaConfig config;
   config.load("tests/unit-tests/ca.conf.test");
-  BOOST_CHECK_EQUAL(config.m_caName, "/ndn");
-  BOOST_CHECK_EQUAL(config.m_freshnessPeriod, time::seconds(720));
-  BOOST_CHECK_EQUAL(config.m_validityPeriod, time::days(360));
-  BOOST_CHECK_EQUAL(config.m_probe, "");
+  BOOST_CHECK_EQUAL(config.m_caPrefix, "/ndn");
   BOOST_CHECK_EQUAL(config.m_caInfo, "ndn testbed ca");
+  BOOST_CHECK_EQUAL(config.m_maxValidityPeriod, time::seconds(86400));
+  BOOST_CHECK_EQUAL(config.m_probeParameterKeys.size(), 1);
+  BOOST_CHECK_EQUAL(config.m_probeParameterKeys.front(), "full name");
+  BOOST_CHECK_EQUAL(config.m_supportedChallenges.size(), 1);
+  BOOST_CHECK_EQUAL(config.m_supportedChallenges.front(), "pin");
 }
 
 BOOST_AUTO_TEST_CASE(ReadNonexistConfigFile)

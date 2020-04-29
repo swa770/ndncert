@@ -22,6 +22,7 @@
 #define NDNCERT_CLIENT_CONFIG_HPP
 
 #include "certificate-request.hpp"
+
 #include <ndn-cxx/security/v2/certificate.hpp>
 
 namespace ndn {
@@ -30,8 +31,7 @@ namespace ndncert {
 /**
  * @brief The configuration for a trusted CA from a requester's perspective
  */
-class ClientCaItem
-{
+class ClientCaItem {
 public:
   // The identity name of the CA. Extracted from config field "ca-prefix"
   Name m_caName;
@@ -39,7 +39,7 @@ public:
   // A brief introduction to the CA. Extracted from config field "ca-info"
   std::string m_caInfo;
   // An instruction for requesters to use _PROBE. Extracted from config field "probe"
-  std::string m_probe; // "email::uid::name"
+  std::string m_probe;  // "email::uid::name"
 
   // CA's certificate
   security::v2::Certificate m_anchor;
@@ -51,11 +51,9 @@ public:
  * For Client configuration format, please refer to:
  *   https://github.com/named-data/ndncert/wiki/Client-Configuration-Sample
  */
-class ClientConfig
-{
+class ClientConfig {
 public:
-  class Error : public std::runtime_error
-  {
+  class Error : public std::runtime_error {
   public:
     using std::runtime_error::runtime_error;
   };
@@ -90,7 +88,7 @@ public:
   std::string m_localNdncertAnchor;
 };
 
-} // namespace ndncert
-} // namespace ndn
+}  // namespace ndncert
+}  // namespace ndn
 
-#endif // NDNCERT_CLIENT_CONFIG_HPP
+#endif  // NDNCERT_CLIENT_CONFIG_HPP
