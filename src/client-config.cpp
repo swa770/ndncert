@@ -108,8 +108,8 @@ ClientConfig::extractCaItem(const Block& contentBlock)
 void
 ClientConfig::removeCaItem(const Name& caName)
 {
-  m_caItems.remove_if([&] (const ClientCaItem& item) {return item.m_caName == caName;});
+  m_caItems.remove_if([&](const ClientCaItem& item) { return item.m_caName == caName; });
 }
 
-} // namespace ndncert
-} // namespace ndn
+}  // namespace ndncert
+}  // namespace ndn

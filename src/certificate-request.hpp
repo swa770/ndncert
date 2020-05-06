@@ -23,6 +23,9 @@
 
 #include "ndncert-common.hpp"
 #include <ndn-cxx/security/v2/certificate.hpp>
+#include <boost/property_tree/info_parser.hpp>
+#include <boost/property_tree/json_parser.hpp>
+#include <boost/property_tree/ptree.hpp>
 
 namespace ndn {
 namespace ndncert {
