@@ -56,11 +56,10 @@ ClientModule::generateInfoInterest(const Name& caName)
 }
 
 bool
-ClientModule::verifyProbeInfoResponse(const Data& reply)
+ClientModule::verifyProbeInfoResponse(const Block& contentBlock)
 {
   // parse the ca item
-  auto contentJson = getJsonFromData(reply);
-  auto caItem = ClientConfig::extractCaItem(contentJson);
+  auto caItem = ClientConfig::extractCaItem(contentBlock);
 
   // verify the probe Data's sig
   if (!security::verifySignature(reply, caItem.m_anchor)) {
@@ -73,9 +72,10 @@ ClientModule::verifyProbeInfoResponse(const Data& reply)
 void
 ClientModule::addCaFromProbeInfoResponse(const Data& reply)
 {
+  const Block& contentBlock = reply.getContent();
+
   // parse the ca item
-  auto contentJson = getJsonFromData(reply);
-  auto caItem = ClientConfig::extractCaItem(contentJson);
+  auto caItem = ClientConfig::extractCaItem(contentBlock);
 
   // update the local config
   bool findItem = false;
