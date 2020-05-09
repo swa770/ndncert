@@ -72,7 +72,7 @@ public:
   generateInfoInterest(const Name& caName);
 
   bool
-  verifyProbeInfoResponse(const Data& reply);
+  verifyInfoResponse(const Data& reply);
 
   /**
    * @brief Process the replied PROBE INFO Data packet
@@ -81,7 +81,7 @@ public:
    * can be verified in later challenge phase.
    */
   void
-  addCaFromProbeInfoResponse(const Data& reply);
+  addCaFromInfoResponse(const Data& reply);
 
   shared_ptr<Interest>
   generateProbeInterest(const ClientCaItem& ca, const std::string& probeInfo);
@@ -98,7 +98,7 @@ public:
   onNewResponse(const Data& reply);
 
   shared_ptr<Interest>
-  generateChallengeInterest(const JsonSection& paramJson);
+  generateChallengeInterest(const Block& paramTLV);
 
   void
   onChallengeResponse(const Data& reply);
@@ -143,7 +143,7 @@ PUBLIC_WITH_TESTS_ELSE_PRIVATE:
   std::string m_challengeStatus = "";
   std::string m_challengeType = "";
   std::string m_certId = "";
-  std::string m_issuedCertName = "";
+  Name m_issuedCertName;
   std::list<std::string> m_challengeList;
   bool m_isCertInstalled = false;
 
