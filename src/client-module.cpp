@@ -67,7 +67,7 @@ ClientModule::verifyInfoResponse(const Data& reply)
 
   // verify the probe Data's sig
   if (!security::verifySignature(reply, caItem.m_anchor)) {
-    _LOG_ERROR("Cannot verify data signature from " << m_ca.m_caName.toUri());
+    _LOG_ERROR("Cannot verify data signature from " << m_ca.m_caPrefix.toUri());
     return false;
   }
   return true;
@@ -84,7 +84,7 @@ ClientModule::addCaFromInfoResponse(const Data& reply)
   // update the local config
   bool findItem = false;
   for (auto& item : m_config.m_caItems) {
-    if (item.m_caName == caItem.m_caName) {
+    if (item.m_caPrefix == caItem.m_caPrefix) {
       findItem = true;
       item = caItem;
     }
@@ -97,7 +97,7 @@ ClientModule::addCaFromInfoResponse(const Data& reply)
 shared_ptr<Interest>
 ClientModule::generateProbeInterest(const ClientCaItem& ca, const std::string& probeInfo)
 {
-  Name interestName = ca.m_caName;
+  Name interestName = ca.m_caPrefix;
   interestName.append("CA").append("PROBE");
   auto interest = make_shared<Interest>(interestName);
   interest->setMustBeFresh(true);
@@ -115,7 +115,7 @@ void
 ClientModule::onProbeResponse(const Data& reply)
 {
   if (!security::verifySignature(reply, m_ca.m_anchor)) {
-    _LOG_ERROR("Cannot verify data signature from " << m_ca.m_caName.toUri());
+    _LOG_ERROR("Cannot verify data signature from " << m_ca.m_caPrefix.toUri());
     return;
   }
 
@@ -140,7 +140,7 @@ ClientModule::generateNewInterest(const time::system_clock::TimePoint& notBefore
   if (!identityName.empty()) { // if identityName is not empty, find the corresponding CA
     bool findCa = false;
     for (const auto& caItem : m_config.m_caItems) {
-      if (caItem.m_caName.isPrefixOf(identityName)) {
+      if (caItem.m_caPrefix.isPrefixOf(identityName)) {
         m_ca = caItem;
         findCa = true;
       }
@@ -157,7 +157,7 @@ ClientModule::generateNewInterest(const time::system_clock::TimePoint& notBefore
     else {
       NDN_LOG_TRACE("Randomly create a new name because m_identityName is empty and the param is empty.");
       auto id = std::to_string(random::generateSecureWord64());
-      m_identityName = m_ca.m_caName;
+      m_identityName = m_ca.m_caPrefix;
       m_identityName.append(id);
     }
   }
@@ -184,7 +184,7 @@ ClientModule::generateNewInterest(const time::system_clock::TimePoint& notBefore
   m_keyChain.sign(certRequest, signingByKey(m_key.getName()).setSignatureInfo(signatureInfo));
 
   // generate Interest packet
-  Name interestName = m_ca.m_caName;
+  Name interestName = m_ca.m_caPrefix;
   interestName.append("CA").append("NEW");
   auto interest = make_shared<Interest>(interestName);
   interest->setMustBeFresh(true);
@@ -202,7 +202,7 @@ std::list<std::string>
 ClientModule::onNewResponse(const Data& reply)
 {
   if (!security::verifySignature(reply, m_ca.m_anchor)) {
-    _LOG_ERROR("Cannot verify data signature from " << m_ca.m_caName.toUri());
+    _LOG_ERROR("Cannot verify data signature from " << m_ca.m_caPrefix.toUri());
     return std::list<std::string>();
   }
   auto contentTLV = reply.getContent();
@@ -236,7 +236,7 @@ ClientModule::generateChallengeInterest(const Block& challengeRequest)
   challengeRequest.parse();
   m_challengeType = readString(challengeRequest.get(tlv_selected_challenge));
 
-  Name interestName = m_ca.m_caName;
+  Name interestName = m_ca.m_caPrefix;
   interestName.append("CA").append("CHALLENGE").append(m_requestId);
   auto interest = make_shared<Interest>(interestName);
   interest->setMustBeFresh(true);
@@ -256,7 +256,7 @@ void
 ClientModule::onChallengeResponse(const Data& reply)
 {
   if (!security::verifySignature(reply, m_ca.m_anchor)) {
-    _LOG_ERROR("Cannot verify data signature from " << m_ca.m_caName.toUri());
+    _LOG_ERROR("Cannot verify data signature from " << m_ca.m_caPrefix.toUri());
     return;
   }
   auto result = decodeBlockWithAesGcm128(reply.getContent(), m_aesKey, (const uint8_t*)"test", strlen("test"));
@@ -277,7 +277,7 @@ ClientModule::onChallengeResponse(const Data& reply)
 shared_ptr<Interest>
 ClientModule::generateDownloadInterest()
 {
-  Name interestName = m_ca.m_caName;
+  Name interestName = m_ca.m_caPrefix;
   interestName.append("CA").append("DOWNLOAD").append(m_requestId);
   auto interest = make_shared<Interest>(interestName);
   interest->setMustBeFresh(true);
