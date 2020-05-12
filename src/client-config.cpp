@@ -19,7 +19,6 @@
  */
 
 #include "client-config.hpp"
-
 #include <ndn-cxx/util/io.hpp>
 #include <fstream>
 
